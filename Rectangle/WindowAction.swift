@@ -41,7 +41,9 @@ enum WindowAction: Int {
     moveRight = 26,
     moveUp = 27,
     moveDown = 28,
-    almostMaximize = 29
+    almostMaximize = 29,
+    moveTopHalf = 30,
+    moveBottomHalf = 31
     
     // Order matters here - it's used in the menu
     static let active = [leftHalf, rightHalf, topHalf, bottomHalf,
@@ -49,7 +51,7 @@ enum WindowAction: Int {
                          firstThird, firstTwoThirds, centerThird, lastTwoThirds, lastThird,
                          maximize, almostMaximize, maximizeHeight, smaller, larger, center, restore,
                          nextDisplay, previousDisplay,
-                         moveLeft, moveRight, moveUp, moveDown]
+                         moveLeft, moveRight, moveUp, moveDown, moveTopHalf, moveBottomHalf]
     
     func post() {
         NotificationCenter.default.post(name: notificationName, object: ExecutionParameters(self))
@@ -97,6 +99,8 @@ enum WindowAction: Int {
         case .moveUp: return "moveUp"
         case .moveDown: return "moveDown"
         case .almostMaximize: return "almostMaximize"
+        case .moveTopHalf: return "moveTopHalf"
+        case .moveBottomHalf: return "moveBottomHalf"
         }
     }
 
@@ -183,6 +187,13 @@ enum WindowAction: Int {
         case .almostMaximize:
             key = "e57-QJ-6bL.title"
             value = "Almost Maximize"
+        case .moveTopHalf:
+            key = "HOm-BV-2jc.title" // UNDONE
+            value = "Move to Top Half"
+        case .moveBottomHalf:
+            key = "1Rc-Od-eP5.title" // UNDONE
+            value = "Move to Bottom Half"
+
         }
         
         return NSLocalizedString(key, tableName: "Main", value: value, comment: "")
@@ -208,22 +219,25 @@ enum WindowAction: Int {
     
     var spectacleDefault: Shortcut? {
         switch self {
-        case .leftHalf: return Shortcut( cmd|alt, kVK_LeftArrow )
-        case .rightHalf: return Shortcut( cmd|alt, kVK_RightArrow )
+        case .leftHalf: return Shortcut( cmd|alt|shift, kVK_LeftArrow )
+        case .rightHalf: return Shortcut( cmd|alt|shift, kVK_RightArrow )
         case .maximize: return Shortcut( cmd|alt, kVK_ANSI_F )
         case .maximizeHeight: return Shortcut( ctrl|alt|shift, kVK_UpArrow )
-        case .previousDisplay: return Shortcut( ctrl|alt|cmd, kVK_LeftArrow )
-        case .nextDisplay:  return Shortcut( ctrl|alt|cmd, kVK_RightArrow )
         case .larger: return Shortcut( ctrl|alt|shift, kVK_RightArrow )
         case .smaller: return Shortcut( ctrl|alt|shift, kVK_LeftArrow )
-        case .bottomHalf: return Shortcut( cmd|alt, kVK_DownArrow )
-        case .topHalf: return Shortcut( cmd|alt, kVK_UpArrow )
         case .center: return Shortcut( alt|cmd, kVK_ANSI_C )
         case .bottomLeft: return Shortcut( cmd|ctrl|shift, kVK_LeftArrow )
         case .bottomRight: return Shortcut( cmd|ctrl|shift, kVK_RightArrow )
         case .topLeft: return Shortcut( ctrl|cmd, kVK_LeftArrow )
         case .topRight: return Shortcut( ctrl|cmd, kVK_RightArrow )
         case .restore: return Shortcut( ctrl|alt, kVK_Delete)
+        case .moveLeft: return Shortcut( ctrl|alt|cmd, kVK_LeftArrow )
+        case .moveRight: return Shortcut( ctrl|alt|cmd, kVK_RightArrow )
+        case .moveTopHalf: return Shortcut( ctrl|alt|cmd, kVK_UpArrow )
+        case .moveBottomHalf: return Shortcut( ctrl|alt|cmd, kVK_DownArrow )
+        case .firstThird: return Shortcut( alt|cmd, kVK_LeftArrow )
+        case .centerThird: return Shortcut( alt|cmd, kVK_DownArrow )
+        case .lastThird: return Shortcut( alt|cmd, kVK_RightArrow )
         default: return nil
         }
     }
@@ -283,6 +297,8 @@ enum WindowAction: Int {
         case .moveUp: return NSImage(imageLiteralResourceName: "moveUpTemplate")
         case .moveDown: return NSImage(imageLiteralResourceName: "moveDownTemplate")
         case .almostMaximize: return NSImage(imageLiteralResourceName: "almostMaximizeTemplate")
+        case .moveTopHalf: return NSImage(imageLiteralResourceName: "moveUpTemplate")  // UNDONE
+        case .moveBottomHalf: return NSImage(imageLiteralResourceName: "moveDownTemplate")  // UNDONE
         }
     }
     

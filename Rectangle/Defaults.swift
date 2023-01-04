@@ -23,7 +23,7 @@ class Defaults {
     static let snapEdgeMarginBottom = FloatDefault(key: "snapEdgeMarginBottom", defaultValue: 5)
     static let snapEdgeMarginLeft = FloatDefault(key: "snapEdgeMarginLeft", defaultValue: 5)
     static let snapEdgeMarginRight = FloatDefault(key: "snapEdgeMarginRight", defaultValue: 5)
-    static let centeredDirectionalMove = OptionalBoolDefault(key: "centeredDirectionalMove")
+    static let centeredDirectionalMove = OptionalBoolDefault(key: "centeredDirectionalMove", defaultValue:false)
     static let ignoredSnapAreas = IntDefault(key: "ignoredSnapAreas")
     static let traverseSingleScreen = OptionalBoolDefault(key: "traverseSingleScreen")
     static let minimumWindowWidth = FloatDefault(key: "minimumWindowWidth")
@@ -71,13 +71,16 @@ class OptionalBoolDefault {
         }
     }
     
-    init(key: String) {
+    init(key: String, defaultValue: Bool? = nil) {
         self.key = key
         let intValue = UserDefaults.standard.integer(forKey: key)
         switch intValue {
         case 1: enabled = true
         case 2: enabled = false
-        default: break
+        default:
+            if let defaultValue=defaultValue {
+                enabled=defaultValue
+            }
         }
         initialized = true
     }
